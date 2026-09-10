@@ -1,0 +1,148 @@
+{
+  "rules": [
+    {
+      "id": "ANGULAR_DOMXSS_1",
+      "severity": "CRITICAL",
+      "rg_pattern": "bypassSecurityTrustHtml",
+      "description": "DomSanitizer.bypassSecurityTrustHtml — отключение санитизации HTML. Риск XSS.",
+      "remediation": "Используйте DomSanitizer.sanitize(SecurityContext.HTML, value) вместо bypass*.",
+      "context_patterns": ["DomSanitizer", "bypassSecurityTrust"]
+    },
+    {
+      "id": "ANGULAR_DOMXSS_2",
+      "severity": "CRITICAL",
+      "rg_pattern": "bypassSecurityTrustScript",
+      "description": "DomSanitizer.bypassSecurityTrustScript — отключение санитизации JavaScript.",
+      "remediation": "Избегайте динамической генерации скриптов через DomSanitizer."
+    },
+    {
+      "id": "ANGULAR_DOMXSS_3",
+      "severity": "CRITICAL",
+      "rg_pattern": "bypassSecurityTrustUrl",
+      "description": "DomSanitizer.bypassSecurityTrustUrl — потенциальный Open Redirect / XSS через javascript: URI.",
+      "remediation": "Валидируйте URL перед использованием в Router.navigate() или window.location."
+    },
+    {
+      "id": "ANGULAR_DOMXSS_4",
+      "severity": "CRITICAL",
+      "rg_pattern": "bypassSecurityTrustResourceUrl",
+      "description": "DomSanitizer.bypassSecurityTrustResourceUrl — iframe/script/stylesheet injection.",
+      "remediation": "Проверяйте origin ресурса перед использованием bypassSecurityTrustResourceUrl."
+    },
+    {
+      "id": "ANGULAR_DOMXSS_5",
+      "severity": "HIGH",
+      "rg_pattern": "\\[innerHTML\\]",
+      "description": "Связывание [innerHTML] — потенциальный XSS при несанитизированном вводе.",
+      "remediation": "Санитизируйте через DomSanitizer.sanitize(SecurityContext.HTML, val) или используйте [textContent].",
+      "context_patterns": ["innerHTML"]
+    },
+    {
+      "id": "ANGULAR_DOMXSS_6",
+      "severity": "HIGH",
+      "rg_pattern": "nativeElement\\.innerHTML",
+      "description": "Прямая запись в ElementRef.nativeElement.innerHTML. Обход Angular санитизации.",
+      "remediation": "Используйте Renderer2.setProperty(el, 'textContent', val) вместо прямой записи innerHTML."
+    },
+    {
+      "id": "ANGULAR_DOMXSS_7",
+      "severity": "CRITICAL",
+      "rg_pattern": "(document\\.write|eval\\(|Function\\(|setTimeout\\s*\\(\\s*[\"'`])",
+      "description": "Использование eval/Function/document.write для динамического кода. Критический XSS.",
+      "remediation": "Избегайте eval-подобных конструкций. Используйте безопасные альтернативы Angular."
+    },
+    {
+      "id": "ANGULAR_PP_1",
+      "severity": "HIGH",
+      "rg_pattern": "__proto__|constructor\\.prototype",
+      "description": "Потенциальный Prototype Pollution через глубокое слияние объектов.",
+      "remediation": "Фильтруйте ключи __proto__, constructor, prototype при merge/unflatten операциях.",
+      "context_patterns": ["merge", "deepMerge", "assign", "clone", "extend", "NgRx", "Akita", "NGXS"]
+    },
+    {
+      "id": "ANGULAR_PP_2",
+      "severity": "MEDIUM",
+      "rg_pattern": "(merge|deepMerge|cloneDeep|assign)\\s*\\(\\s*\\{",
+      "description": "Глубокое слияние объектов (deep merge). Риск Prototype Pollution при ненадежных данных.",
+      "remediation": "Используйте Object.assign({}, ...) для поверхностного копирования или фильтрацию ключей."
+    },
+    {
+      "id": "ANGULAR_TMPL_1",
+      "severity": "CRITICAL",
+      "rg_pattern": "(compileModule|compileModuleSync|compileModuleAsync|CompilerFactory|Compiler)",
+      "description": "JIT-компиляция шаблонов Angular. Риск Template Injection при пользовательском вводе.",
+      "remediation": "Используйте AOT-компиляцию. Никогда не передавайте пользовательский ввод в JIT-компилятор."
+    },
+    {
+      "id": "ANGULAR_TMPL_2",
+      "severity": "HIGH",
+      "rg_pattern": "(ViewContainerRef|createComponent|ComponentFactory|ComponentFactoryResolver)",
+      "description": "Динамическое создание компонентов. Риск инъекции при невалидированном вводе в шаблон.",
+      "remediation": "Валидируйте тип компонента. Используйте строго типизированные factory-функции."
+    },
+    {
+      "id": "ANGULAR_TMPL_3",
+      "severity": "HIGH",
+      "rg_pattern": "constructor\\.constructor",
+      "description": "Доступ к Function конструктору через constructor.constructor - признак template injection exploitation.",
+      "remediation": "Не допускайте пользовательский ввод в динамические Angular выражения."
+    },
+    {
+      "id": "ANGULAR_OPENREDIR_1",
+      "severity": "HIGH",
+      "rg_pattern": "Router\\.navigate\\s*\\(\\s*\\[\\s*\\w+\\]",
+      "description": "Динамическая навигация Router.navigate с переменной. Риск Open Redirect.",
+      "remediation": "Валидируйте путь через allowlist разрешённых маршрутов. Не используйте returnUrl без проверки."
+    },
+    {
+      "id": "ANGULAR_OPENREDIR_2",
+      "severity": "MEDIUM",
+      "rg_pattern": "returnUrl|redirectUrl|nextUrl|callbackUrl|continue\\b",
+      "description": "Параметр редиректа в URL — потенциальный Open Redirect вектор.",
+      "remediation": "Проверяйте, что URL редиректа принадлежит тому же домену или входит в белый список."
+    },
+    {
+      "id": "ANGULAR_PATHTRAV_1",
+      "severity": "MEDIUM",
+      "rg_pattern": "\\.\\./|\\.\\.\\\\",
+      "description": "Path Traversal паттерн в путях загрузки ресурсов. Client-side path traversal.",
+      "remediation": "Нормализуйте пути и проверяйте, что результирующий путь начинается с ожидаемой директории."
+    },
+    {
+      "id": "ANGULAR_STORAGE_1",
+      "severity": "HIGH",
+      "rg_pattern": "localStorage\\.setItem\\s*\\(\\s*[\"'`]token|jwt|auth|session|access_token",
+      "description": "Хранение токенов/JWT в localStorage. Доступно при XSS (нет HttpOnly флага).",
+      "remediation": "Используйте HttpOnly cookies с SameSite=Strict для хранения сессионных токенов."
+    },
+    {
+      "id": "ANGULAR_STORAGE_2",
+      "severity": "MEDIUM",
+      "rg_pattern": "sessionStorage\\.setItem\\s*\\(\\s*[\"'`]token|jwt|auth|session|access_token",
+      "description": "Хранение токенов в sessionStorage. Менее опасно чем localStorage, но всё ещё доступно при XSS.",
+      "remediation": "Предпочтительнее HttpOnly cookies или in-memory хранилище (RxJS BehaviorSubject)."
+    },
+    {
+      "id": "ANGULAR_STORAGE_3",
+      "severity": "MEDIUM",
+      "rg_pattern": "localStorage\\.setItem|sessionStorage\\.setItem",
+      "description": "Хранение данных в localStorage/sessionStorage. Убедитесь, что PII не сохраняется.",
+      "remediation": "Не храните PII в Web Storage. Используйте серверное хранение для чувствительных данных."
+    },
+    {
+      "id": "ANGULAR_HTTP_1",
+      "severity": "MEDIUM",
+      "rg_pattern": "HttpClient\\s+[\\w]+\\s*=",
+      "description": "HttpClient используется. Проверьте корректность CORS и CSRF-защиты.",
+      "remediation": "Убедитесь, что HttpClient использует withCredentials=true только для доверенных origins."
+    }
+  ],
+  "meta": {
+    "version": "1.0",
+    "target": "Angular (2+) TypeScript/HTML source",
+    "engine": "rg (ripgrep)",
+    "total_rules": 20,
+    "created": "2026-09-10",
+    "context_token_budget": 4096
+  }
+}

