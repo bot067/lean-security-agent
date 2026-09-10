@@ -5,7 +5,7 @@ import re
 
 TOOL_CALL_RE = re.compile(r"<tool_call>(.*?)</tool_call>", re.DOTALL)
 JSON_BLOCK_RE = re.compile(r"```(?:json)?\s*\n?(\{.*?\})\n?```", re.DOTALL)
-BARE_JSON_RE = re.compile(r'\{"tool":\s*"run_command".*?"argv":\s*\[.*?\].*?\}', re.DOTALL)
+BARE_JSON_RE = re.compile(r'(\{"tool":\s*"run_command".*?"argv":\s*\[.*?\].*?\})', re.DOTALL)
 
 
 def parse_tool_call(text: str) -> dict | None:

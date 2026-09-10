@@ -1,0 +1,23 @@
+{
+  "time_seconds": 2.2,
+  "vram_baseline_mb": 6842,
+  "vram_peak_mb": 6823,
+  "vram_total_mb": 8151,
+  "vram_delta_mb": 0,
+  "rules_loaded": 15,
+  "findings_raw": 23,
+  "findings_unique": 23,
+  "findings_critical": 5,
+  "findings_high": 14,
+  "findings_medium": 4,
+  "findings_low": 0,
+  "xss_payloads_sent": 3,
+  "xss_reflected": 0,
+  "header_issues": [
+    "Content-Security-Policy"
+  ],
+  "pp_http_code": 200,
+  "auto_detected_framework": "angularjs",
+  "detection_proof": "polyfills.js + main.js in DOM",
+  "unit_tests": "108/108 passing"
+}
