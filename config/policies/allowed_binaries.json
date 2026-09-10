@@ -1,0 +1,31 @@
+{
+  "binaries": [
+    "nmap",
+    "curl",
+    "wget",
+    "ffuf",
+    "dirb",
+    "gobuster",
+    "jq",
+    "grep",
+    "awk",
+    "sed",
+    "sort",
+    "uniq",
+    "head",
+    "tail",
+    "cat",
+    "ls",
+    "pwd",
+    "wc",
+    "file",
+    "ping",
+    "traceroute",
+    "dig",
+    "host",
+    "which",
+    "date",
+    "echo",
+    "base64"
+  ]
+}

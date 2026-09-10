@@ -1,0 +1,42 @@
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+dist/
+build/
+.venv/
+venv/
+env/
+*.egg
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Docker
+*.log
+
+# Reports (too large for repo)
+agent_reports/
+reports/
+
+# Secrets
+config/secrets/
+.env
+*.pem
+*.key
+
+# Models (too large)
+*.gguf
+models/
+
+# Test artifacts
+tests/results/
+.coverage
+htmlcov/

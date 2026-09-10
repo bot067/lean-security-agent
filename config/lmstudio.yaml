@@ -1,0 +1,10 @@
+host: 127.0.0.1
+port: 1234
+context_length: 4096
+temperature: 0.1
+top_p: 0.9
+repetition_penalty: 1.1
+max_tokens: 2048
+gpu_offload: max
+flash_attention: true
+model: "Huihui-Qwen3.5-9B-Q4_K_M"

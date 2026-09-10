@@ -1,0 +1,37 @@
+services:
+  juice-shop:
+    image: bkimminich/juice-shop:latest
+    container_name: juice-shop
+    networks:
+      pentest-net:
+        ipv4_address: 172.20.0.10
+    restart: unless-stopped
+
+  security-agent:
+    build:
+      context: .
+      dockerfile: Dockerfile.agent
+    container_name: security-agent
+    networks:
+      pentest-net:
+        ipv4_address: 172.20.0.20
+    user: "65534:65534"
+    read_only: true
+    tmpfs:
+      - /tmp:size=100M
+    volumes:
+      - ./agent_reports:/workspace/agent_reports:rw
+    deploy:
+      resources:
+        limits:
+          cpus: "2"
+          memory: 2G
+    restart: unless-stopped
+
+networks:
+  pentest-net:
+    driver: bridge
+    internal: true
+    ipam:
+      config:
+        - subnet: 172.20.0.0/24

@@ -1,0 +1,18 @@
+FROM python:3.11-slim
+
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    nmap \
+    curl \
+    jq \
+    grep \
+    gawk \
+    coreutils \
+    && rm -rf /var/lib/apt/lists/*
+
+RUN curl -L https://github.com/ffuf/ffuf/releases/download/v2.1.0/ffuf_2.1.0_linux_amd64.tar.gz \
+    | tar xz -C /usr/local/bin ffuf
+
+WORKDIR /workspace
+RUN mkdir -p /workspace/agent_reports
+
+CMD ["sleep", "infinity"]

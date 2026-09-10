@@ -1,0 +1,17 @@
+{
+  "patterns": [
+    "rm\\s+-rf",
+    "mkfs",
+    "dd\\s+if=",
+    "chmod\\s+777",
+    "curl.*\\|\\s*(sh|bash)",
+    "wget.*\\|\\s*(sh|bash)",
+    "eval\\s+",
+    "source\\s+",
+    "base64\\s+-d.*\\|",
+    ">\\s*/etc/",
+    ">\\s*/dev/",
+    "\\$\\(",
+    "`"
+  ]
+}
