@@ -1,0 +1,70 @@
+[
+ {
+  "ctx": 2048,
+  "load_vram_mb": 1163,
+  "run": {
+   "wall_s": 5.16,
+   "completion_tokens": 300,
+   "tok_s": 58.1,
+   "content_len": 988
+  },
+  "gpu_after": {
+   "vram_used_mb": 5840,
+   "vram_total_mb": 8151,
+   "temp_c": 51,
+   "power_w": 40.62,
+   "util_pct": 5
+  }
+ },
+ {
+  "ctx": 4096,
+  "load_vram_mb": 995,
+  "run": {
+   "wall_s": 5.27,
+   "completion_tokens": 300,
+   "tok_s": 57.0,
+   "content_len": 1041
+  },
+  "gpu_after": {
+   "vram_used_mb": 5943,
+   "vram_total_mb": 8151,
+   "temp_c": 51,
+   "power_w": 70.88,
+   "util_pct": 4
+  }
+ },
+ {
+  "ctx": 8192,
+  "load_vram_mb": 948,
+  "run": {
+   "wall_s": 5.05,
+   "completion_tokens": 300,
+   "tok_s": 59.5,
+   "content_len": 984
+  },
+  "gpu_after": {
+   "vram_used_mb": 5963,
+   "vram_total_mb": 8151,
+   "temp_c": 51,
+   "power_w": 68.14,
+   "util_pct": 1
+  }
+ },
+ {
+  "ctx": 16384,
+  "load_vram_mb": 939,
+  "run": {
+   "wall_s": 5.01,
+   "completion_tokens": 300,
+   "tok_s": 59.9,
+   "content_len": 982
+  },
+  "gpu_after": {
+   "vram_used_mb": 6224,
+   "vram_total_mb": 8151,
+   "temp_c": 51,
+   "power_w": 54.05,
+   "util_pct": 1
+  }
+ }
+]

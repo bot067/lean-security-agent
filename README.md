@@ -106,8 +106,18 @@ lean-security-agent/
 ├── config/            # Конфигурации Docker, compose и JSON-политики
 ├── tests/             # Набор автоматизированных тестов
 ├── scripts/           # Вспомогательные утилиты
+├── experiments/       # Воспроизводимые эксперименты (сырые данные + метрики)
 └── examples/          # Примеры использования
 ```
+
+## Эксперименты
+
+Воспроизводимые эксперименты с сырыми данными и метриками (EBM Level I) — см. каталог [`experiments/`](experiments/):
+
+| Эксперимент | Результат |
+|---|---|
+| [`juice-shop-v1`](experiments/juice-shop-v1/) — полный цикл анализа OWASP Juice Shop | **2.2 с** · 23 находки (5 CRITICAL / 14 HIGH / 4 MEDIUM) · авто-детект AngularJS · 108/108 тестов |
+| [`local-inference-benchmark-rtx5060`](experiments/local-inference-benchmark-rtx5060/) — инференс планировщика на RTX 5060 8GB | **57–60 ток/с** на ctx 2048→16384 · VRAM 5.84–6.22 ГБ · 51 °C |
 
 ## Отказ от ответственности
 
